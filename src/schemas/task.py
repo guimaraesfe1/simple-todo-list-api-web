@@ -3,6 +3,12 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class BaseTaskSchema(BaseModel):
+    id: int
+    title: Optional[str]
+    description: Optional[str]
+
+
 class CreateUserSchema(BaseModel):
     title: str
     description: str

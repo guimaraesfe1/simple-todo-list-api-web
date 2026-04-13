@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from sqlalchemy.exc import IntegrityError, NoResultFound
 
 from src.dependencies.task import GetTaskService
+from src.dependencies.user import GetCurrentUser
 from src.schemas.task import BaseTaskSchema, CreateUserSchema, UpdateUserSchema
 
 router = APIRouter(prefix='/task', tags=['Task CRUD'])
@@ -10,7 +11,11 @@ router = APIRouter(prefix='/task', tags=['Task CRUD'])
 @router.post(
     '', status_code=status.HTTP_201_CREATED, response_model=BaseTaskSchema
 )
-def create_task(task_data: CreateUserSchema, task_service: GetTaskService):
+def create_task(
+    task_data: CreateUserSchema,
+    current_user: GetCurrentUser,
+    task_service: GetTaskService,
+):
 
     try:
         task = task_service.create_task(task_data)
@@ -25,7 +30,9 @@ def create_task(task_data: CreateUserSchema, task_service: GetTaskService):
 @router.get(
     '/{task_id}', status_code=status.HTTP_200_OK, response_model=BaseTaskSchema
 )
-def get_task_by_id(task_id: int, task_service: GetTaskService):
+def get_task_by_id(
+    task_id: int, current_user: GetCurrentUser, task_service: GetTaskService
+):
 
     try:
         task = task_service.get_task_by_id(task_id)
@@ -38,7 +45,9 @@ def get_task_by_id(task_id: int, task_service: GetTaskService):
 
 
 @router.delete('/{task_id}', status_code=status.HTTP_200_OK)
-def delete_task(task_id: int, task_service: GetTaskService):
+def delete_task(
+    task_id: int, current_user: GetCurrentUser, task_service: GetTaskService
+):
     try:
         task_service.delete_task(task_id)
     except NoResultFound:
@@ -53,7 +62,10 @@ def delete_task(task_id: int, task_service: GetTaskService):
     '/{task_id}', status_code=status.HTTP_200_OK, response_model=BaseTaskSchema
 )
 def update_task(
-    task_id: int, task_data: UpdateUserSchema, task_service: GetTaskService
+    task_id: int,
+    task_data: UpdateUserSchema,
+    current_user: GetCurrentUser,
+    task_service: GetTaskService,
 ):
     try:
         task = task_service.update_task(task_id, task_data)

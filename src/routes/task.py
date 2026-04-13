@@ -18,7 +18,7 @@ def create_task(
 ):
 
     try:
-        task = task_service.create_task(task_data)
+        task = task_service.create_task(task_data, current_user.id)
     except IntegrityError:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail='Task not unique'
@@ -35,7 +35,7 @@ def get_task_by_id(
 ):
 
     try:
-        task = task_service.get_task_by_id(task_id)
+        task = task_service.get_task_by_id(task_id, current_user.id)
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Task not found'
@@ -49,7 +49,7 @@ def delete_task(
     task_id: int, current_user: GetCurrentUser, task_service: GetTaskService
 ):
     try:
-        task_service.delete_task(task_id)
+        task_service.delete_task(task_id, current_user.id)
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Task Not found'
@@ -68,7 +68,7 @@ def update_task(
     task_service: GetTaskService,
 ):
     try:
-        task = task_service.update_task(task_id, task_data)
+        task = task_service.update_task(task_id, task_data, current_user.id)
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Task Not found'

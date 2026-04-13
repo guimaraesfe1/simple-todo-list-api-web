@@ -7,6 +7,7 @@ class BaseTaskSchema(BaseModel):
     id: int
     title: Optional[str]
     description: Optional[str]
+    user_id: int
 
 
 class CreateUserSchema(BaseModel):

@@ -14,6 +14,8 @@ class TaskService:
     def create_task(self, task_data: CreateUserSchema, user_id: int):
         task_data_dict = task_data.model_dump()
 
+        task_data_dict['user_id'] = user_id
+
         new_task = Task(**task_data_dict)
 
         try:
